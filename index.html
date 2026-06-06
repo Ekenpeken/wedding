@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jonathan & Victoria — 5 juni 2027</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  ::selection { background: #d4cfc8; color: #3a352d; }
+  body { background: #f7f5f0; color: #3a352d; font-family: 'DM Sans', sans-serif; overflow-x: hidden; }
+  input, textarea, select, button { font-family: 'DM Sans', sans-serif; }
+
+  /* Typography helpers */
+  .font-display { font-family: 'Cormorant Garamond', serif; }
+  .font-body { font-family: 'DM Sans', sans-serif; }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes float {
+    0%, 100% { transform: translateX(-50%) translateY(0); }
+    50% { transform: translateX(-50%) translateY(8px); }
+  }
+  .fade-up { opacity: 0; transform: translateY(32px); transition: opacity 0.8s cubic-bezier(.22,1,.36,1), transform 0.8s cubic-bezier(.22,1,.36,1); }
+  .fade-up.visible { opacity: 1; transform: translateY(0); }
+  .hero-anim { animation: fadeUp 1s ease both; }
+  .hero-anim-1 { animation-delay: 0.15s; }
+  .hero-anim-2 { animation-delay: 0.3s; }
+  .hero-anim-3 { animation-delay: 0.45s; }
+  .hero-anim-4 { animation-delay: 0.6s; }
+  .hero-anim-5 { animation-delay: 0.7s; }
+  .hero-anim-6 { animation-delay: 0.85s; }
+
+  /* Nav */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(247,245,240,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid rgba(212,207,200,0.5); }
+  .nav-inner { max-width: 960px; margin: 0 auto; padding: 16px 24px; display: flex; justify-content: space-between; align-items: center; }
+  .nav-logo { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 400; letter-spacing: 0.12em; color: #3a352d; text-decoration: none; }
+  .nav-links { display: flex; gap: 32px; }
+  .nav-links a { font-size: 0.8rem; letter-spacing: 0.1em; text-transform: uppercase; color: #6b6356; text-decoration: none; transition: color 0.2s; }
+  .nav-links a:hover { color: #3a352d; }
+
+  /* Hero */
+  .hero { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 120px 24px 80px; position: relative; }
+  .hero-line { position: absolute; top: 15%; left: 50%; transform: translateX(-50%); width: 1px; height: 80px; background: linear-gradient(to bottom, transparent, #c4bdb0); }
+  .hero-label { font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: #8a7f6e; margin-bottom: 40px; }
+  .hero-name { font-family: 'Cormorant Garamond', serif; font-weight: 300; font-size: clamp(2.8rem, 8vw, 5.5rem); line-height: 1.1; color: #3a352d; letter-spacing: 0.02em; }
+  .hero-and { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: clamp(1.2rem, 3vw, 1.8rem); font-weight: 300; color: #8a7f6e; margin: 8px 0; }
+  .hero-divider { width: 48px; height: 1px; background: #c4bdb0; margin: 40px 0; }
+  .hero-info { font-size: 0.85rem; letter-spacing: 0.15em; color: #6b6356; }
+  .hero-arrow { position: absolute; bottom: 40px; left: 50%; animation: float 2.5s ease-in-out infinite; }
+
+  /* Countdown */
+  .countdown { display: flex; gap: 32px; margin-top: 48px; }
+  .countdown-val { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: #3a352d; line-height: 1; }
+  .countdown-label { font-size: 0.65rem; letter-spacing: 0.15em; text-transform: uppercase; color: #8a7f6e; margin-top: 6px; }
+
+  /* Sections */
+  .section { max-width: 720px; margin: 0 auto; padding: 80px 24px; }
+  .section-label { font-family: 'Cormorant Garamond', serif; font-size: 0.75rem; letter-spacing: 0.2em; text-transform: uppercase; color: #8a7f6e; margin-bottom: 8px; display: block; }
+  .section-heading { font-family: 'Cormorant Garamond', serif; font-size: 2.2rem; font-weight: 300; color: #3a352d; letter-spacing: 0.04em; margin-bottom: 48px; text-align: center; }
+
+  /* Divider ornament */
+  .ornament { text-align: center; padding: 0 24px; }
+
+  /* Timeline */
+  .timeline { position: relative; }
+  .timeline-line { position: absolute; left: 59px; top: 8px; bottom: 8px; width: 1px; background: #d4cfc8; }
+  .timeline-item { display: flex; gap: 32px; margin-bottom: 40px; position: relative; align-items: flex-start; }
+  .timeline-item:last-child { margin-bottom: 0; }
+  .timeline-time { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 400; color: #8a7f6e; min-width: 50px; text-align: right; padding-top: 2px; }
+  .timeline-dot { width: 9px; height: 9px; border-radius: 50%; border: 1.5px solid #8a7f6e; background: #f7f5f0; flex-shrink: 0; margin-top: 7px; z-index: 1; }
+  .timeline-title { font-family: 'Cormorant Garamond', serif; font-size: 1.25rem; font-weight: 500; color: #3a352d; margin-bottom: 4px; }
+  .timeline-desc { font-size: 0.9rem; color: #6b6356; line-height: 1.5; }
+
+  /* Venue card */
+  .venue-card { background: #edeae4; border-radius: 12px; padding: 40px 32px; text-align: center; }
+  .venue-name { font-family: 'Cormorant Garamond', serif; font-size: 1.6rem; font-weight: 400; color: #3a352d; margin-bottom: 8px; }
+  .venue-address { font-size: 0.9rem; color: #6b6356; line-height: 1.6; }
+  .venue-link { display: inline-block; margin-top: 20px; font-size: 0.8rem; letter-spacing: 0.12em; text-transform: uppercase; color: #3a352d; text-decoration: none; border-bottom: 1px solid #3a352d; padding-bottom: 2px; transition: opacity 0.2s; }
+  .venue-link:hover { opacity: 0.6; }
+
+  /* FAQ */
+  .faq-item { border-bottom: 1px solid #d4cfc8; cursor: pointer; user-select: none; }
+  .faq-q { display: flex; justify-content: space-between; align-items: center; padding: 20px 0; }
+  .faq-q-text { font-family: 'Cormorant Garamond', serif; font-size: 1.15rem; color: #3a352d; letter-spacing: 0.01em; }
+  .faq-icon { font-size: 1.5rem; color: #8a7f6e; transition: transform 0.3s ease; flex-shrink: 0; margin-left: 16px; }
+  .faq-icon.open { transform: rotate(45deg); }
+  .faq-a { max-height: 0; overflow: hidden; transition: max-height 0.4s cubic-bezier(.22,1,.36,1), padding-bottom 0.4s ease; }
+  .faq-a.open { max-height: 150px; padding-bottom: 20px; }
+  .faq-a p { font-size: 0.95rem; color: #6b6356; line-height: 1.6; }
+
+  /* Form */
+  .form-wrap { max-width: 480px; margin: 0 auto; }
+  .form-note { font-size: 0.9rem; color: #6b6356; text-align: center; margin-bottom: 40px; line-height: 1.6; }
+  .form-group { margin-bottom: 28px; }
+  .form-input { width: 100%; padding: 12px 0; border: none; border-bottom: 1px solid #c4bdb0; background: transparent; font-size: 1rem; color: #3a352d; outline: none; transition: border-color 0.2s; }
+  .form-input:focus { border-bottom-color: #3a352d; }
+  .form-input::placeholder { color: #b0a899; }
+  select.form-input { cursor: pointer; }
+  textarea.form-input { resize: vertical; }
+  .btn-group { display: flex; gap: 16px; margin-top: 12px; }
+  .btn-choice { flex: 1; padding: 14px 20px; background: transparent; color: #3a352d; border: 1px solid #c4bdb0; border-radius: 6px; cursor: pointer; font-size: 0.9rem; transition: all 0.25s ease; }
+  .btn-choice.active { background: #3a352d; color: #f7f5f0; }
+  .btn-submit { width: 100%; padding: 16px 32px; background: #c4bdb0; color: #f7f5f0; border: none; border-radius: 6px; font-size: 0.85rem; letter-spacing: 0.15em; text-transform: uppercase; cursor: not-allowed; transition: all 0.3s ease; }
+  .btn-submit.ready { background: #3a352d; cursor: pointer; }
+  .btn-submit.ready:hover { background: #52493d; }
+
+  /* Thank you */
+  .thank-you { text-align: center; padding: 40px 0; display: none; }
+  .thank-you.show { display: block; }
+  .thank-you h3 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 300; color: #3a352d; margin-bottom: 12px; }
+  .thank-you p { font-size: 0.95rem; color: #6b6356; line-height: 1.6; }
+
+  /* Footer */
+  footer { text-align: center; padding: 40px 24px 60px; border-top: 1px solid #d4cfc8; }
+  .footer-names { font-family: 'Cormorant Garamond', serif; font-style: italic; font-size: 1.4rem; font-weight: 300; color: #8a7f6e; }
+  .footer-date { font-size: 0.75rem; letter-spacing: 0.15em; color: #b0a899; margin-top: 12px; }
+
+  /* Responsive */
+  @media (max-width: 480px) {
+    .countdown { gap: 20px; }
+    .timeline-item { gap: 20px; }
+    .timeline-line { left: 49px; }
+    .nav-links { gap: 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-inner">
+    <a href="#hero" class="nav-logo">J & V</a>
+    <div class="nav-links">
+      <a href="#schema">Schema</a>
+      <a href="#qa">Frågor</a>
+      <a href="#osa">OSA</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section id="hero" class="hero">
+  <div class="hero-line"></div>
+  <p class="font-body hero-label hero-anim">Vi gifter oss</p>
+  <h1 class="hero-name hero-anim hero-anim-1">Jonathan</h1>
+  <p class="hero-and hero-anim hero-anim-2">&amp;</p>
+  <h1 class="hero-name hero-anim hero-anim-3">Victoria</h1>
+  <div class="hero-divider hero-anim hero-anim-4"></div>
+  <p class="font-body hero-info hero-anim hero-anim-5">5 JUNI 2027 &nbsp;·&nbsp; TRANKÄRRSGÅRDEN, KUNGÄLV</p>
+
+  <div class="countdown hero-anim hero-anim-6">
+    <div style="text-align:center"><div class="countdown-val" id="cd-days">—</div><div class="countdown-label">dagar</div></div>
+    <div style="text-align:center"><div class="countdown-val" id="cd-hours">—</div><div class="countdown-label">timmar</div></div>
+    <div style="text-align:center"><div class="countdown-val" id="cd-mins">—</div><div class="countdown-label">min</div></div>
+    <div style="text-align:center"><div class="countdown-val" id="cd-secs">—</div><div class="countdown-label">sek</div></div>
+  </div>
+
+  <div class="hero-arrow">
+    <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3 L10 17 M4 11 L10 17 L16 11" stroke="#c4bdb0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+</section>
+
+<!-- Ornament -->
+<div class="ornament">
+  <svg width="120" height="20" viewBox="0 0 120 20" style="opacity:0.3">
+    <line x1="0" y1="10" x2="50" y2="10" stroke="#8a7f6e" stroke-width="0.5"/>
+    <circle cx="60" cy="10" r="3" fill="none" stroke="#8a7f6e" stroke-width="0.5"/>
+    <line x1="70" y1="10" x2="120" y2="10" stroke="#8a7f6e" stroke-width="0.5"/>
+  </svg>
+</div>
+
+<!-- Schema -->
+<section id="schema" class="section">
+  <div class="fade-up">
+    <span class="section-label">Programmet</span>
+    <h2 class="section-heading">Dagens schema</h2>
+    <div class="timeline">
+      <div class="timeline-line"></div>
+      <div class="timeline-item"><div class="timeline-time">15:00</div><div class="timeline-dot"></div><div><div class="timeline-title">Vigsel</div><div class="timeline-desc">Ceremonin börjar</div></div></div>
+      <div class="timeline-item"><div class="timeline-time">15:45</div><div class="timeline-dot"></div><div><div class="timeline-title">Mingel &amp; gratulationer</div><div class="timeline-desc">Bubbel och tilltugg</div></div></div>
+      <div class="timeline-item"><div class="timeline-time">17:00</div><div class="timeline-dot"></div><div><div class="timeline-title">Middag</div><div class="timeline-desc">Treretters middag serveras</div></div></div>
+      <div class="timeline-item"><div class="timeline-time">20:00</div><div class="timeline-dot"></div><div><div class="timeline-title">Tårta &amp; tal</div><div class="timeline-desc">Bröllopstårta och högtidstal</div></div></div>
+      <div class="timeline-item"><div class="timeline-time">21:00</div><div class="timeline-dot"></div><div><div class="timeline-title">Fest &amp; dans</div><div class="timeline-desc">Dansgolvet öppnar</div></div></div>
+      <div class="timeline-item"><div class="timeline-time">01:00</div><div class="timeline-dot"></div><div><div class="timeline-title">Kvällen avslutas</div><div class="timeline-desc">Tack för ikväll!</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- Plats -->
+<section class="section" style="padding-top:0">
+  <div class="fade-up">
+    <div class="venue-card">
+      <span class="section-label" style="margin-bottom:16px">Platsen</span>
+      <h3 class="venue-name">Trankärrsgården</h3>
+      <p class="venue-address">Tranekärr 150, 442 49 Kungälv</p>
+      <a href="https://maps.google.com/?q=Tranekärr+150+442+49+Kungälv" target="_blank" rel="noopener noreferrer" class="venue-link">Visa på karta →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Q&A -->
+<section id="qa" class="section">
+  <div class="fade-up">
+    <span class="section-label">Bra att veta</span>
+    <h2 class="section-heading">Vanliga frågor</h2>
+    <div id="faq-list"></div>
+  </div>
+</section>
+
+<!-- OSA -->
+<section id="osa" class="section" style="padding-bottom:40px">
+  <div class="fade-up">
+    <span class="section-label">Anmälan</span>
+    <h2 class="section-heading">OSA</h2>
+
+    <div class="thank-you" id="thank-you">
+      <h3>Tack!</h3>
+      <p id="thank-msg"></p>
+    </div>
+
+    <div class="form-wrap" id="rsvp-form">
+      <p class="form-note">Svara senast den 1 maj 2027</p>
+
+      <div class="form-group">
+        <label class="section-label">Namn</label>
+        <input type="text" class="form-input" id="f-name" placeholder="Förnamn Efternamn">
+      </div>
+
+      <div class="form-group">
+        <label class="section-label">Antal gäster</label>
+        <select class="form-input" id="f-guests">
+          <option value="1">1 person</option>
+          <option value="2">2 personer</option>
+          <option value="3">3 personer</option>
+          <option value="4">4 personer</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="section-label">Kan ni komma?</label>
+        <div class="btn-group">
+          <button class="btn-choice" data-val="ja" onclick="setAttending('ja')">Ja, vi kommer!</button>
+          <button class="btn-choice" data-val="nej" onclick="setAttending('nej')">Tyvärr inte</button>
+        </div>
+      </div>
+
+      <div class="form-group" id="food-group" style="display:none">
+        <label class="section-label">Allergier eller specialkost</label>
+        <input type="text" class="form-input" id="f-food" placeholder="T.ex. glutenfritt, vegetariskt...">
+      </div>
+
+      <div class="form-group">
+        <label class="section-label">Meddelande till brudparet</label>
+        <textarea class="form-input" id="f-message" rows="3" placeholder="Valfritt"></textarea>
+      </div>
+
+      <button class="btn-submit" id="btn-submit" onclick="submitForm()">Skicka svar</button>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <p class="footer-names">Jonathan & Victoria</p>
+  <p class="footer-date">5 JUNI 2027</p>
+</footer>
+
+<script>
+// Countdown
+const weddingDate = new Date("2027-06-05T15:00:00");
+function updateCountdown() {
+  const now = new Date();
+  const diff = Math.max(0, weddingDate - now);
+  document.getElementById("cd-days").textContent = Math.floor(diff / 86400000);
+  document.getElementById("cd-hours").textContent = Math.floor((diff % 86400000) / 3600000);
+  document.getElementById("cd-mins").textContent = Math.floor((diff % 3600000) / 60000);
+  document.getElementById("cd-secs").textContent = Math.floor((diff % 60000) / 1000);
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add("visible"); observer.unobserve(e.target); } });
+}, { threshold: 0.1 });
+document.querySelectorAll(".fade-up").forEach(el => observer.observe(el));
+
+// FAQ
+const faqs = [
+  { q: "Vad är klädkoden?", a: "Kavaj. Tänk sommarfint – vi firar utomhus om vädret tillåter." },
+  { q: "Kan jag ta med barn?", a: "Vi älskar era barn men önskar en vuxenkväll. Kontakta oss om ni har frågor." },
+  { q: "Finns det parkering?", a: "Ja, det finns gott om fri parkering vid Trankärrsgården." },
+  { q: "Kan jag hålla tal?", a: "Absolut! Kontakta vår toastmaster i förväg så vi kan planera kvällen." },
+  { q: "Specialkost?", a: "Ange eventuella allergier eller önskemål i OSA-formuläret nedan." },
+];
+const faqList = document.getElementById("faq-list");
+faqs.forEach((faq, i) => {
+  const item = document.createElement("div");
+  item.className = "faq-item";
+  item.innerHTML = `
+    <div class="faq-q"><span class="faq-q-text">${faq.q}</span><span class="faq-icon">+</span></div>
+    <div class="faq-a"><p>${faq.a}</p></div>`;
+  item.addEventListener("click", () => {
+    const a = item.querySelector(".faq-a");
+    const icon = item.querySelector(".faq-icon");
+    const isOpen = a.classList.contains("open");
+    document.querySelectorAll(".faq-a.open").forEach(el => { el.classList.remove("open"); el.parentElement.querySelector(".faq-icon").classList.remove("open"); });
+    if (!isOpen) { a.classList.add("open"); icon.classList.add("open"); }
+  });
+  faqList.appendChild(item);
+});
+
+// RSA form
+let attending = "";
+function setAttending(val) {
+  attending = val;
+  document.querySelectorAll(".btn-choice").forEach(b => b.classList.toggle("active", b.dataset.val === val));
+  document.getElementById("food-group").style.display = val === "ja" ? "block" : "none";
+  checkReady();
+}
+function checkReady() {
+  const name = document.getElementById("f-name").value.trim();
+  const btn = document.getElementById("btn-submit");
+  if (name && attending) { btn.classList.add("ready"); btn.style.cursor = "pointer"; }
+  else { btn.classList.remove("ready"); btn.style.cursor = "not-allowed"; }
+}
+document.getElementById("f-name").addEventListener("input", checkReady);
+
+function submitForm() {
+  const name = document.getElementById("f-name").value.trim();
+  if (!name || !attending) return;
+  document.getElementById("rsvp-form").style.display = "none";
+  const ty = document.getElementById("thank-you");
+  ty.classList.add("show");
+  document.getElementById("thank-msg").textContent = attending === "ja"
+    ? "Vad roligt att ni kan komma! Vi ses den 5 juni."
+    : "Vad synd att ni inte kan komma. Vi hoppas vi ses snart ändå!";
+}
+</script>
+</body>
+</html>
