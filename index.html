@@ -288,6 +288,13 @@
         <label class="sec-label" style="text-align:left">Allergier eller specialkost</label>
         <input type="text" class="form-input" id="f-food" placeholder="T.ex. glutenfritt, vegetariskt...">
       </div>
+      <div class="form-group" id="speech-group" style="display:none">
+        <label class="sec-label" style="text-align:left">Vill du hålla tal?</label>
+        <div class="btn-group">
+          <button class="btn-choice" data-speech="ja" onclick="setSpeech('ja')">Ja, gärna!</button>
+          <button class="btn-choice" data-speech="nej" onclick="setSpeech('nej')">Nej tack</button>
+        </div>
+      </div>
       <div class="form-group">
         <label class="sec-label" style="text-align:left">Meddelande till brudparet</label>
         <textarea class="form-input" id="f-message" rows="3" placeholder="Valfritt"></textarea>
@@ -345,21 +352,29 @@ faqs.forEach(f => {
 // Lämna GOOGLE_FORM_URL tom ("") för att använda demo-läge.
 // Se instruktioner längre ner.
 // ============================================================
-const GOOGLE_FORM_URL = ""; // <-- KLISTRA IN DIN GOOGLE FORM URL HÄR
+const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScC4KUR9_CnuL8XCRvUQhWkJXxof4_iTxRd06jYLoJSEocTEQ/viewform"; // <-- KLISTRA IN DIN GOOGLE FORM URL HÄR
 
 // Google Forms entry IDs – byt ut dessa mot dina egna:
-const ENTRY_NAME    = "entry.XXXXXXXXX";
-const ENTRY_GUESTS  = "entry.XXXXXXXXX";
-const ENTRY_ATTEND  = "entry.XXXXXXXXX";
-const ENTRY_FOOD    = "entry.XXXXXXXXX";
-const ENTRY_MESSAGE = "entry.XXXXXXXXX";
+const ENTRY_NAME    = "entry.21947022";
+const ENTRY_GUESTS  = "entry.713809786";
+const ENTRY_ATTEND  = "entry.1995632185";
+const ENTRY_FOOD    = "entry.1854950474";
+const ENTRY_SPEECH  = "entry.887296743";
+const ENTRY_MESSAGE = "entry.662289322";
 
 let attending="";
+let speech="";
 function setAttending(v){
   attending=v;
-  document.querySelectorAll(".btn-choice").forEach(b=>b.classList.toggle("active",b.dataset.val===v));
+  document.querySelectorAll("[data-val]").forEach(b=>b.classList.toggle("active",b.dataset.val===v));
   document.getElementById("food-group").style.display=v==="ja"?"block":"none";
+  document.getElementById("speech-group").style.display=v==="ja"?"block":"none";
+  if(v==="nej"){speech=""; document.querySelectorAll("[data-speech]").forEach(b=>b.classList.remove("active"));}
   ck();
+}
+function setSpeech(v){
+  speech=v;
+  document.querySelectorAll("[data-speech]").forEach(b=>b.classList.toggle("active",b.dataset.speech===v));
 }
 function ck(){
   const n=document.getElementById("f-name").value.trim();
@@ -375,6 +390,7 @@ function submitForm(){
 
   const guests=document.getElementById("f-guests").value;
   const food=document.getElementById("f-food").value;
+  const speechVal=speech==="ja"?"Ja":"Nej";
   const message=document.getElementById("f-message").value;
 
   // If Google Form URL is configured, submit via hidden iframe
@@ -384,6 +400,7 @@ function submitForm(){
       + "&" + ENTRY_GUESTS+"="+encodeURIComponent(guests)
       + "&" + ENTRY_ATTEND+"="+encodeURIComponent(attending==="ja"?"Ja":"Nej")
       + "&" + ENTRY_FOOD+"="+encodeURIComponent(food)
+      + "&" + ENTRY_SPEECH+"="+encodeURIComponent(speechVal)
       + "&" + ENTRY_MESSAGE+"="+encodeURIComponent(message)
       + "&submit=Submit";
     const iframe=document.createElement("iframe");
