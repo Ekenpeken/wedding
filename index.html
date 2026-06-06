@@ -18,6 +18,10 @@
   @keyframes fadeUp { from { opacity:0; transform:translateY(24px); } to { opacity:1; transform:translateY(0); } }
   @keyframes float { 0%,100% { transform:translateX(-50%) translateY(0); } 50% { transform:translateX(-50%) translateY(8px); } }
   @keyframes sway { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(2deg); } }
+  @keyframes gentleSway { 0%,100% { transform: rotate(0deg); } 50% { transform: rotate(1.5deg); } }
+  @keyframes bubbleUp { 0% { opacity:0; transform:translateY(0) scale(0.5); } 30% { opacity:0.7; } 100% { opacity:0; transform:translateY(-60px) scale(0.3); } }
+  @keyframes shimmer { 0%,100% { opacity:0.3; } 50% { opacity:0.7; } }
+  @keyframes glassGlow { 0%,100% { filter:drop-shadow(0 0 4px rgba(201,168,76,0.15)); } 50% { filter:drop-shadow(0 0 12px rgba(201,168,76,0.3)); } }
   .fade-up { opacity:0; transform:translateY(32px); transition: opacity .8s cubic-bezier(.22,1,.36,1), transform .8s cubic-bezier(.22,1,.36,1); }
   .fade-up.visible { opacity:1; transform:translateY(0); }
   .hero-anim { animation: fadeUp 1s ease both; }
@@ -32,20 +36,28 @@
   .nav-links a { font-size:.78rem; letter-spacing:.1em; text-transform:uppercase; color:#6b7c5e; text-decoration:none; transition:color .2s; }
   .nav-links a:hover { color:#3a4d30; }
 
-  /* Botanical decoration SVGs */
-  .botanical-top { position:absolute; top:0; left:50%; transform:translateX(-50%); width:min(600px,90vw); pointer-events:none; opacity:.85; }
-  .botanical-corner-left { position:absolute; bottom:0; left:0; width:180px; pointer-events:none; opacity:.5; transform:scaleX(-1); }
-  .botanical-corner-right { position:absolute; bottom:0; right:0; width:180px; pointer-events:none; opacity:.5; }
   .leaf-float { animation: sway 6s ease-in-out infinite; transform-origin: bottom center; }
 
   /* Hero */
   .hero { min-height:100vh; display:flex; flex-direction:column; justify-content:center; align-items:center; text-align:center; padding:120px 24px 80px; position:relative; overflow:hidden; }
   .hero-label { font-family:'Great Vibes',cursive; font-size:clamp(1.4rem,4vw,2rem); color:#7a9468; margin-bottom:20px; }
-  .hero-name { font-family:'Great Vibes',cursive; font-weight:400; font-size:clamp(3rem,9vw,6rem); line-height:1.15; color:#3a4d30; }
-  .hero-och { font-family:'Cormorant Garamond',serif; font-size:1rem; letter-spacing:.25em; text-transform:uppercase; color:#8a9b7a; margin:10px 0; }
+  .hero-names-block { position:relative; display:inline-block; padding:0 40px; }
+  .hero-name { font-family:'Great Vibes',cursive; font-weight:400; font-size:clamp(3rem,9vw,6rem); line-height:1.15; color:#3a4d30; position:relative; z-index:2; }
+  .hero-och { font-family:'Cormorant Garamond',serif; font-size:1rem; letter-spacing:.25em; text-transform:uppercase; color:#8a9b7a; margin:10px 0; position:relative; z-index:2; }
   .hero-divider { width:48px; height:1px; background:#a9b79b; margin:32px 0; }
   .hero-info { font-size:.85rem; letter-spacing:.13em; color:#6b7c5e; }
   .hero-arrow { position:absolute; bottom:40px; left:50%; animation:float 2.5s ease-in-out infinite; }
+
+  /* Champagne glasses */
+  .champagne-left, .champagne-right { position:absolute; z-index:1; pointer-events:none; animation: glassGlow 4s ease-in-out infinite; }
+  .champagne-left { left:-120px; top:50%; transform:translateY(-50%); }
+  .champagne-right { right:-120px; top:50%; transform:translateY(-50%); }
+
+  /* Botanical frame around names */
+  .botanical-frame { position:absolute; top:-60px; left:-80px; right:-80px; bottom:-40px; z-index:0; pointer-events:none; }
+
+  /* Bubbles */
+  .bubble { position:absolute; border-radius:50%; background:radial-gradient(circle at 30% 30%, rgba(255,255,255,0.5), rgba(201,168,76,0.15)); }
 
   /* Countdown */
   .countdown { display:flex; gap:32px; margin-top:40px; }
@@ -56,9 +68,6 @@
   .section { max-width:720px; margin:0 auto; padding:80px 24px; }
   .sec-label { font-family:'Cormorant Garamond',serif; font-size:.75rem; letter-spacing:.2em; text-transform:uppercase; color:#8a9b7a; margin-bottom:8px; display:block; text-align:center; }
   .sec-heading { font-family:'Great Vibes',cursive; font-size:2.4rem; font-weight:400; color:#3a4d30; margin-bottom:48px; text-align:center; }
-
-  /* Ornament */
-  .ornament { text-align:center; padding:0 24px; }
 
   /* Leaf divider */
   .leaf-divider { display:flex; align-items:center; justify-content:center; gap:16px; padding:10px 0; }
@@ -116,12 +125,22 @@
   .ft-names { font-family:'Great Vibes',cursive; font-size:1.6rem; font-weight:400; color:#7a9468; }
   .ft-date { font-size:.75rem; letter-spacing:.15em; color:#a9b79b; margin-top:12px; }
 
-  @media (max-width:480px) {
+  @media (max-width:600px) {
     .countdown { gap:20px; }
     .tl-item { gap:20px; }
     .tl-line { left:49px; }
     .nav-links { gap:20px; }
-    .botanical-top { width:100vw; }
+    .champagne-left { left:-80px; }
+    .champagne-right { right:-80px; }
+    .champagne-left svg, .champagne-right svg { width:100px; height:200px; }
+    .botanical-frame { left:-50px; right:-50px; top:-40px; }
+    .hero-names-block { padding:0 20px; }
+  }
+  @media (max-width:420px) {
+    .champagne-left { left:-55px; }
+    .champagne-right { right:-55px; }
+    .champagne-left svg, .champagne-right svg { width:70px; height:150px; }
+    .botanical-frame { left:-30px; right:-30px; }
   }
 </style>
 </head>
@@ -139,57 +158,208 @@
 </nav>
 
 <section id="hero" class="hero">
-  <!-- Botanical top decoration -->
-  <svg class="botanical-top" viewBox="0 0 600 180" xmlns="http://www.w3.org/2000/svg">
-    <defs>
-      <linearGradient id="lg1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7a9468" stop-opacity=".7"/><stop offset="100%" stop-color="#a9b79b" stop-opacity=".3"/></linearGradient>
-      <linearGradient id="lg2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#8aaa72" stop-opacity=".5"/><stop offset="100%" stop-color="#b5c7a8" stop-opacity=".2"/></linearGradient>
-      <linearGradient id="lg3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6b8c56" stop-opacity=".6"/><stop offset="100%" stop-color="#95b085" stop-opacity=".25"/></linearGradient>
-    </defs>
-    <!-- Left branch -->
-    <g class="leaf-float" style="animation-delay:0s">
-      <path d="M300 170 Q280 130 240 100 Q220 85 200 80" stroke="#7a9468" stroke-width="1.2" fill="none" opacity=".6"/>
-      <ellipse cx="210" cy="78" rx="28" ry="10" transform="rotate(-25 210 78)" fill="url(#lg1)"/>
-      <ellipse cx="245" cy="95" rx="24" ry="9" transform="rotate(-15 245 95)" fill="url(#lg2)"/>
-      <ellipse cx="265" cy="115" rx="20" ry="8" transform="rotate(-8 265 115)" fill="url(#lg1)"/>
-      <path d="M240 100 Q220 75 180 55" stroke="#7a9468" stroke-width=".8" fill="none" opacity=".4"/>
-      <ellipse cx="188" cy="55" rx="22" ry="8" transform="rotate(-35 188 55)" fill="url(#lg2)"/>
-      <ellipse cx="215" cy="70" rx="18" ry="7" transform="rotate(-20 215 70)" fill="url(#lg3)"/>
-      <path d="M260 120 Q235 95 200 90" stroke="#8aaa72" stroke-width=".7" fill="none" opacity=".3"/>
-      <ellipse cx="208" cy="88" rx="18" ry="7" transform="rotate(-12 208 88)" fill="url(#lg3)"/>
-    </g>
-    <!-- Right branch -->
-    <g class="leaf-float" style="animation-delay:1s">
-      <path d="M300 170 Q320 130 360 100 Q380 85 400 80" stroke="#7a9468" stroke-width="1.2" fill="none" opacity=".6"/>
-      <ellipse cx="390" cy="78" rx="28" ry="10" transform="rotate(25 390 78)" fill="url(#lg1)"/>
-      <ellipse cx="355" cy="95" rx="24" ry="9" transform="rotate(15 355 95)" fill="url(#lg2)"/>
-      <ellipse cx="335" cy="115" rx="20" ry="8" transform="rotate(8 335 115)" fill="url(#lg1)"/>
-      <path d="M360 100 Q380 75 420 55" stroke="#7a9468" stroke-width=".8" fill="none" opacity=".4"/>
-      <ellipse cx="412" cy="55" rx="22" ry="8" transform="rotate(35 412 55)" fill="url(#lg2)"/>
-      <ellipse cx="385" cy="70" rx="18" ry="7" transform="rotate(20 385 70)" fill="url(#lg3)"/>
-      <path d="M340 120 Q365 95 400 90" stroke="#8aaa72" stroke-width=".7" fill="none" opacity=".3"/>
-      <ellipse cx="392" cy="88" rx="18" ry="7" transform="rotate(12 392 88)" fill="url(#lg3)"/>
-    </g>
-    <!-- Extra accent leaves -->
-    <g opacity=".3">
-      <ellipse cx="170" cy="40" rx="20" ry="7" transform="rotate(-40 170 40)" fill="#8aaa72"/>
-      <ellipse cx="430" cy="40" rx="20" ry="7" transform="rotate(40 430 40)" fill="#8aaa72"/>
-      <ellipse cx="155" cy="25" rx="15" ry="5" transform="rotate(-50 155 25)" fill="#95b085"/>
-      <ellipse cx="445" cy="25" rx="15" ry="5" transform="rotate(50 445 25)" fill="#95b085"/>
-    </g>
-    <!-- Small dots (berries/buds) -->
-    <circle cx="195" cy="60" r="3" fill="#c9a84c" opacity=".35"/>
-    <circle cx="230" cy="80" r="2.5" fill="#c9a84c" opacity=".3"/>
-    <circle cx="405" cy="60" r="3" fill="#c9a84c" opacity=".35"/>
-    <circle cx="370" cy="80" r="2.5" fill="#c9a84c" opacity=".3"/>
-    <circle cx="175" cy="45" r="2" fill="#d4b86a" opacity=".25"/>
-    <circle cx="425" cy="45" r="2" fill="#d4b86a" opacity=".25"/>
-  </svg>
 
   <p class="hero-label hero-anim">Vi ska gifta oss!</p>
-  <h1 class="hero-name hero-anim d1">Jonathan</h1>
-  <p class="hero-och hero-anim d2">OCH</p>
-  <h1 class="hero-name hero-anim d3">Victoria</h1>
+
+  <div class="hero-names-block">
+
+    <!-- Botanical frame around names - watercolor eucalyptus style -->
+    <svg class="botanical-frame" viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg" style="position:absolute;top:-80px;left:50%;transform:translateX(-50%);width:min(750px,110vw);height:auto;pointer-events:none;z-index:0;">
+      <defs>
+        <linearGradient id="wc1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#6b8c56" stop-opacity=".55"/><stop offset="100%" stop-color="#a9b79b" stop-opacity=".2"/></linearGradient>
+        <linearGradient id="wc2" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#7a9e64" stop-opacity=".5"/><stop offset="100%" stop-color="#bccfae" stop-opacity=".15"/></linearGradient>
+        <linearGradient id="wc3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8aaa72" stop-opacity=".45"/><stop offset="100%" stop-color="#c5d5c0" stop-opacity=".15"/></linearGradient>
+        <linearGradient id="wc4" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#5a7a48" stop-opacity=".4"/><stop offset="100%" stop-color="#95b085" stop-opacity=".2"/></linearGradient>
+        <linearGradient id="wc5" x1="0" y1="1" x2="1" y2="0"><stop offset="0%" stop-color="#7a9468" stop-opacity=".5"/><stop offset="100%" stop-color="#b5c7a8" stop-opacity=".1"/></linearGradient>
+        <filter id="wblur"><feGaussianBlur stdDeviation="0.8"/></filter>
+        <filter id="wblur2"><feGaussianBlur stdDeviation="1.2"/></filter>
+      </defs>
+
+      <!-- ========== TOP LEFT CORNER ========== -->
+      <g class="leaf-float" style="animation-delay:0s;animation-duration:7s">
+        <!-- Main branch from top-left -->
+        <path d="M60 0 Q80 40 120 80 Q160 120 200 140 Q240 155 280 160" stroke="#6b8c56" stroke-width="1.2" fill="none" opacity=".4"/>
+        <!-- Large eucalyptus leaves -->
+        <ellipse cx="75" cy="20" rx="30" ry="12" transform="rotate(-60 75 20)" fill="url(#wc1)" filter="url(#wblur)"/>
+        <ellipse cx="90" cy="40" rx="26" ry="10" transform="rotate(-45 90 40)" fill="url(#wc2)"/>
+        <ellipse cx="110" cy="65" rx="28" ry="11" transform="rotate(-35 110 65)" fill="url(#wc3)" filter="url(#wblur)"/>
+        <ellipse cx="135" cy="90" rx="24" ry="10" transform="rotate(-25 135 90)" fill="url(#wc1)"/>
+        <ellipse cx="160" cy="110" rx="26" ry="9" transform="rotate(-18 160 110)" fill="url(#wc2)" filter="url(#wblur)"/>
+        <ellipse cx="190" cy="128" rx="22" ry="9" transform="rotate(-12 190 128)" fill="url(#wc4)"/>
+        <ellipse cx="220" cy="142" rx="20" ry="8" transform="rotate(-5 220 142)" fill="url(#wc3)"/>
+        <ellipse cx="250" cy="152" rx="18" ry="7" transform="rotate(0 250 152)" fill="url(#wc5)" filter="url(#wblur)"/>
+        <!-- Secondary branch -->
+        <path d="M90 40 Q60 30 35 10" stroke="#7a9468" stroke-width=".8" fill="none" opacity=".3"/>
+        <ellipse cx="45" cy="12" rx="20" ry="8" transform="rotate(-65 45 12)" fill="url(#wc5)"/>
+        <ellipse cx="65" cy="28" rx="16" ry="6" transform="rotate(-50 65 28)" fill="url(#wc2)" filter="url(#wblur)"/>
+        <!-- Third branch -->
+        <path d="M130 85 Q100 65 70 60" stroke="#8aaa72" stroke-width=".6" fill="none" opacity=".25"/>
+        <ellipse cx="80" cy="58" rx="18" ry="7" transform="rotate(-20 80 58)" fill="url(#wc4)" filter="url(#wblur2)"/>
+        <ellipse cx="105" cy="70" rx="14" ry="6" transform="rotate(-15 105 70)" fill="url(#wc3)"/>
+      </g>
+
+      <!-- ========== TOP RIGHT CORNER ========== -->
+      <g class="leaf-float" style="animation-delay:1.5s;animation-duration:8s">
+        <path d="M640 0 Q620 40 580 80 Q540 120 500 140 Q460 155 420 160" stroke="#6b8c56" stroke-width="1.2" fill="none" opacity=".4"/>
+        <ellipse cx="625" cy="20" rx="30" ry="12" transform="rotate(60 625 20)" fill="url(#wc1)" filter="url(#wblur)"/>
+        <ellipse cx="610" cy="40" rx="26" ry="10" transform="rotate(45 610 40)" fill="url(#wc2)"/>
+        <ellipse cx="590" cy="65" rx="28" ry="11" transform="rotate(35 590 65)" fill="url(#wc3)" filter="url(#wblur)"/>
+        <ellipse cx="565" cy="90" rx="24" ry="10" transform="rotate(25 565 90)" fill="url(#wc1)"/>
+        <ellipse cx="540" cy="110" rx="26" ry="9" transform="rotate(18 540 110)" fill="url(#wc2)" filter="url(#wblur)"/>
+        <ellipse cx="510" cy="128" rx="22" ry="9" transform="rotate(12 510 128)" fill="url(#wc4)"/>
+        <ellipse cx="480" cy="142" rx="20" ry="8" transform="rotate(5 480 142)" fill="url(#wc3)"/>
+        <ellipse cx="450" cy="152" rx="18" ry="7" transform="rotate(0 450 152)" fill="url(#wc5)" filter="url(#wblur)"/>
+        <!-- Secondary branch -->
+        <path d="M610 40 Q640 30 665 10" stroke="#7a9468" stroke-width=".8" fill="none" opacity=".3"/>
+        <ellipse cx="655" cy="12" rx="20" ry="8" transform="rotate(65 655 12)" fill="url(#wc5)"/>
+        <ellipse cx="635" cy="28" rx="16" ry="6" transform="rotate(50 635 28)" fill="url(#wc2)" filter="url(#wblur)"/>
+        <!-- Third branch -->
+        <path d="M570 85 Q600 65 630 60" stroke="#8aaa72" stroke-width=".6" fill="none" opacity=".25"/>
+        <ellipse cx="620" cy="58" rx="18" ry="7" transform="rotate(20 620 58)" fill="url(#wc4)" filter="url(#wblur2)"/>
+        <ellipse cx="595" cy="70" rx="14" ry="6" transform="rotate(15 595 70)" fill="url(#wc3)"/>
+      </g>
+
+      <!-- ========== BOTTOM LEFT ========== -->
+      <g style="animation: gentleSway 9s ease-in-out infinite; transform-origin: center;">
+        <path d="M60 420 Q90 380 140 350 Q180 330 230 320" stroke="#7a9468" stroke-width="1" fill="none" opacity=".35"/>
+        <ellipse cx="75" cy="405" rx="24" ry="10" transform="rotate(55 75 405)" fill="url(#wc2)" filter="url(#wblur)"/>
+        <ellipse cx="100" cy="380" rx="22" ry="9" transform="rotate(40 100 380)" fill="url(#wc3)"/>
+        <ellipse cx="125" cy="358" rx="24" ry="10" transform="rotate(30 125 358)" fill="url(#wc1)" filter="url(#wblur)"/>
+        <ellipse cx="155" cy="340" rx="20" ry="8" transform="rotate(18 155 340)" fill="url(#wc5)"/>
+        <ellipse cx="185" cy="328" rx="18" ry="7" transform="rotate(8 185 328)" fill="url(#wc2)" filter="url(#wblur)"/>
+        <ellipse cx="215" cy="320" rx="16" ry="7" transform="rotate(2 215 320)" fill="url(#wc4)"/>
+        <!-- Small secondary -->
+        <path d="M100 382 Q70 395 50 415" stroke="#8aaa72" stroke-width=".6" fill="none" opacity=".2"/>
+        <ellipse cx="58" cy="410" rx="14" ry="6" transform="rotate(65 58 410)" fill="url(#wc3)" filter="url(#wblur2)"/>
+      </g>
+
+      <!-- ========== BOTTOM RIGHT ========== -->
+      <g style="animation: gentleSway 10s ease-in-out infinite; animation-delay:2s; transform-origin: center;">
+        <path d="M640 420 Q610 380 560 350 Q520 330 470 320" stroke="#7a9468" stroke-width="1" fill="none" opacity=".35"/>
+        <ellipse cx="625" cy="405" rx="24" ry="10" transform="rotate(-55 625 405)" fill="url(#wc2)" filter="url(#wblur)"/>
+        <ellipse cx="600" cy="380" rx="22" ry="9" transform="rotate(-40 600 380)" fill="url(#wc3)"/>
+        <ellipse cx="575" cy="358" rx="24" ry="10" transform="rotate(-30 575 358)" fill="url(#wc1)" filter="url(#wblur)"/>
+        <ellipse cx="545" cy="340" rx="20" ry="8" transform="rotate(-18 545 340)" fill="url(#wc5)"/>
+        <ellipse cx="515" cy="328" rx="18" ry="7" transform="rotate(-8 515 328)" fill="url(#wc2)" filter="url(#wblur)"/>
+        <ellipse cx="485" cy="320" rx="16" ry="7" transform="rotate(-2 485 320)" fill="url(#wc4)"/>
+        <path d="M600 382 Q630 395 650 415" stroke="#8aaa72" stroke-width=".6" fill="none" opacity=".2"/>
+        <ellipse cx="642" cy="410" rx="14" ry="6" transform="rotate(-65 642 410)" fill="url(#wc3)" filter="url(#wblur2)"/>
+      </g>
+
+      <!-- ========== LEFT SIDE VINES ========== -->
+      <g class="leaf-float" style="animation-delay:3s;animation-duration:9s">
+        <path d="M0 180 Q40 190 80 210 Q110 225 130 250" stroke="#7a9468" stroke-width=".9" fill="none" opacity=".3"/>
+        <ellipse cx="20" cy="182" rx="20" ry="8" transform="rotate(-10 20 182)" fill="url(#wc3)" filter="url(#wblur)"/>
+        <ellipse cx="55" cy="195" rx="18" ry="7" transform="rotate(5 55 195)" fill="url(#wc5)"/>
+        <ellipse cx="85" cy="212" rx="20" ry="8" transform="rotate(15 85 212)" fill="url(#wc1)" filter="url(#wblur)"/>
+        <ellipse cx="110" cy="232" rx="16" ry="7" transform="rotate(25 110 232)" fill="url(#wc2)"/>
+      </g>
+
+      <!-- ========== RIGHT SIDE VINES ========== -->
+      <g class="leaf-float" style="animation-delay:4s;animation-duration:8s">
+        <path d="M700 180 Q660 190 620 210 Q590 225 570 250" stroke="#7a9468" stroke-width=".9" fill="none" opacity=".3"/>
+        <ellipse cx="680" cy="182" rx="20" ry="8" transform="rotate(10 680 182)" fill="url(#wc3)" filter="url(#wblur)"/>
+        <ellipse cx="645" cy="195" rx="18" ry="7" transform="rotate(-5 645 195)" fill="url(#wc5)"/>
+        <ellipse cx="615" cy="212" rx="20" ry="8" transform="rotate(-15 615 212)" fill="url(#wc1)" filter="url(#wblur)"/>
+        <ellipse cx="590" cy="232" rx="16" ry="7" transform="rotate(-25 590 232)" fill="url(#wc2)"/>
+      </g>
+
+      <!-- Small berries/buds -->
+      <circle cx="70" cy="50" r="3" fill="#c9a84c" opacity=".3"/>
+      <circle cx="115" cy="78" r="2.5" fill="#d4b86a" opacity=".25"/>
+      <circle cx="55" cy="30" r="2" fill="#c9a84c" opacity=".2"/>
+      <circle cx="630" cy="50" r="3" fill="#c9a84c" opacity=".3"/>
+      <circle cx="585" cy="78" r="2.5" fill="#d4b86a" opacity=".25"/>
+      <circle cx="645" cy="30" r="2" fill="#c9a84c" opacity=".2"/>
+      <circle cx="85" cy="395" r="2.5" fill="#c9a84c" opacity=".25"/>
+      <circle cx="615" cy="395" r="2.5" fill="#c9a84c" opacity=".25"/>
+
+      <!-- Tiny dusty blue accents (like in the reference image) -->
+      <circle cx="95" cy="45" r="4" fill="#8fa7b5" opacity=".15" filter="url(#wblur2)"/>
+      <circle cx="605" cy="45" r="4" fill="#8fa7b5" opacity=".15" filter="url(#wblur2)"/>
+      <circle cx="140" cy="100" r="3" fill="#8fa7b5" opacity=".12" filter="url(#wblur2)"/>
+      <circle cx="560" cy="100" r="3" fill="#8fa7b5" opacity=".12" filter="url(#wblur2)"/>
+    </svg>
+
+    <!-- Champagne glass LEFT -->
+    <div class="champagne-left hero-anim d3">
+      <svg width="130" height="260" viewBox="0 0 130 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="glass-l" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f5eed6" stop-opacity=".7"/>
+            <stop offset="40%" stop-color="#e8dbb5" stop-opacity=".5"/>
+            <stop offset="100%" stop-color="#d4c48a" stop-opacity=".3"/>
+          </linearGradient>
+          <linearGradient id="champagne-l" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f0e4b8" stop-opacity=".6"/>
+            <stop offset="100%" stop-color="#dccf8a" stop-opacity=".4"/>
+          </linearGradient>
+          <linearGradient id="stem-l" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#d4c48a" stop-opacity=".5"/>
+            <stop offset="100%" stop-color="#c5b67a" stop-opacity=".4"/>
+          </linearGradient>
+        </defs>
+        <!-- Glass tilted slightly right (toward center) -->
+        <g transform="translate(65,130) rotate(12) translate(-65,-130)">
+          <!-- Glass bowl -->
+          <path d="M40 40 C40 40 35 90 38 110 C40 118 50 125 65 127 C80 125 90 118 92 110 C95 90 90 40 90 40" fill="url(#glass-l)" stroke="#c9b97a" stroke-width=".6" opacity=".8"/>
+          <!-- Champagne liquid -->
+          <path d="M43 75 C43 75 42 105 45 112 C48 118 55 122 65 123 C75 122 82 118 85 112 C88 105 87 75 87 75" fill="url(#champagne-l)"/>
+          <!-- Glass rim -->
+          <ellipse cx="65" cy="40" rx="26" ry="6" fill="none" stroke="#c9b97a" stroke-width=".8" opacity=".6"/>
+          <!-- Shine -->
+          <path d="M50 50 Q48 80 50 105" stroke="white" stroke-width="1.5" opacity=".3" fill="none" stroke-linecap="round"/>
+          <!-- Stem -->
+          <rect x="62" y="127" width="6" height="70" rx="3" fill="url(#stem-l)"/>
+          <!-- Base -->
+          <ellipse cx="65" cy="200" rx="22" ry="5" fill="#c5b67a" opacity=".35"/>
+          <!-- Bubbles -->
+          <circle cx="58" cy="95" r="1.5" fill="white" opacity=".4" class="bubble" style="animation:bubbleUp 3s infinite 0s;"/>
+          <circle cx="68" cy="100" r="1" fill="white" opacity=".35" class="bubble" style="animation:bubbleUp 3.5s infinite .5s;"/>
+          <circle cx="62" cy="85" r="1.2" fill="white" opacity=".3" class="bubble" style="animation:bubbleUp 4s infinite 1s;"/>
+          <circle cx="72" cy="90" r="1.5" fill="white" opacity=".35" class="bubble" style="animation:bubbleUp 3.2s infinite 1.5s;"/>
+          <circle cx="55" cy="105" r="1" fill="white" opacity=".3" class="bubble" style="animation:bubbleUp 4.5s infinite 2s;"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- Champagne glass RIGHT -->
+    <div class="champagne-right hero-anim d3">
+      <svg width="130" height="260" viewBox="0 0 130 260" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="glass-r" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f5eed6" stop-opacity=".7"/>
+            <stop offset="40%" stop-color="#e8dbb5" stop-opacity=".5"/>
+            <stop offset="100%" stop-color="#d4c48a" stop-opacity=".3"/>
+          </linearGradient>
+          <linearGradient id="champagne-r" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#f0e4b8" stop-opacity=".6"/>
+            <stop offset="100%" stop-color="#dccf8a" stop-opacity=".4"/>
+          </linearGradient>
+        </defs>
+        <!-- Glass tilted slightly left (toward center) -->
+        <g transform="translate(65,130) rotate(-12) translate(-65,-130)">
+          <path d="M40 40 C40 40 35 90 38 110 C40 118 50 125 65 127 C80 125 90 118 92 110 C95 90 90 40 90 40" fill="url(#glass-r)" stroke="#c9b97a" stroke-width=".6" opacity=".8"/>
+          <path d="M43 75 C43 75 42 105 45 112 C48 118 55 122 65 123 C75 122 82 118 85 112 C88 105 87 75 87 75" fill="url(#champagne-r)"/>
+          <ellipse cx="65" cy="40" rx="26" ry="6" fill="none" stroke="#c9b97a" stroke-width=".8" opacity=".6"/>
+          <path d="M50 50 Q48 80 50 105" stroke="white" stroke-width="1.5" opacity=".3" fill="none" stroke-linecap="round"/>
+          <rect x="62" y="127" width="6" height="70" rx="3" fill="#c5b67a" opacity=".4"/>
+          <ellipse cx="65" cy="200" rx="22" ry="5" fill="#c5b67a" opacity=".35"/>
+          <!-- Bubbles -->
+          <circle cx="60" cy="92" r="1.5" fill="white" opacity=".4" class="bubble" style="animation:bubbleUp 3.8s infinite .3s;"/>
+          <circle cx="70" cy="98" r="1" fill="white" opacity=".35" class="bubble" style="animation:bubbleUp 3s infinite .8s;"/>
+          <circle cx="65" cy="88" r="1.2" fill="white" opacity=".3" class="bubble" style="animation:bubbleUp 4.2s infinite 1.3s;"/>
+          <circle cx="75" cy="95" r="1.5" fill="white" opacity=".35" class="bubble" style="animation:bubbleUp 3.5s infinite 1.8s;"/>
+          <circle cx="58" cy="102" r="1" fill="white" opacity=".3" class="bubble" style="animation:bubbleUp 4s infinite 2.3s;"/>
+        </g>
+      </svg>
+    </div>
+
+    <h1 class="hero-name hero-anim d1">Jonathan</h1>
+    <p class="hero-och hero-anim d2">OCH</p>
+    <h1 class="hero-name hero-anim d3">Victoria</h1>
+  </div>
+
   <div class="hero-divider hero-anim d4"></div>
   <p class="hero-info hero-anim d5">Lördagen den 5 juni 2027 &nbsp;·&nbsp; Kl. 15.00</p>
   <p class="hero-info hero-anim d5" style="margin-top:4px;font-size:.8rem;color:#8a9b7a">Trankärrsgården, Kungälv</p>
@@ -327,9 +497,9 @@ document.querySelectorAll(".fade-up").forEach(el => obs.observe(el));
 
 // FAQ
 const faqs = [
-  {q:"Vad är klädkoden?",a:"Klädkoden är kavaj. Det innebär kostym i valfri färg tillsammans med fluga eller slips för alla män, och klänning, kjol eller byxdress i lite festligare stil för alla kvinnor."},
+  {q:"Vad är klädkoden?",a:"Klädkoden är kavaj. Det innebär kostym i valfri färg med slips eller fluga, eller klänning, kjol eller byxdress i en festlig stil."},
   {q:"Får jag ta med en +1?",a:"Vi önskar fira vår dag tillsammans med våra närmaste. Därför gäller inbjudan endast de personer som står angivna på inbjudan. Tack för er förståelse."},
-  {q:"Önskar ni er något i present?",a:"Det viktigaste för oss är att få fira dagen tillsammans med er. Vi har därför ingen önskelista och önskar oss inget särskilt. Om ni ändå vill ge en gåva blir vi väldigt glada för ett bidrag till vår bröllopsresa. Bidrag kan lämnas via banköverföring till:."},
+  {q:"Önskar ni er något i present?",a:"Det viktigaste för oss är att få fira dagen tillsammans med er. Vi har därför ingen önskelista och önskar oss inget särskilt. Om ni ändå vill ge en gåva blir vi väldigt glada för ett bidrag till vår bröllopsresa. Bidrag kan lämnas via banköverföring till: 3120 01 38813 (Nordea)."},
   {q:"Finns det parkering?",a:"Ja, det finns gott om gratis parkering vid Trankärrsgården för er som kommer med bil. För er som inte kör rekommenderar vi att taxi förbokas i god tid, då tillgången i Kungälv kan vara begränsad."},
   {q:"Får man fotografera och filma?",a:"Under vigseln önskar vi en mobilfri stund, utan fotografering eller filmning. Under resten av dagen och kvällen är det självklart fritt fram att ta bilder - och vi blir väldigt glada om ni vill dela dem med oss efteråt."},
   {q:"Kan jag hålla tal?",a:"Absolut! Ange detta när du OSA:r, så kommer vår toastmaster/toastmadame att kontakta dig närmare den stora dagen."},
@@ -348,15 +518,7 @@ faqs.forEach(f => {
 });
 
 // RSVP form
-// ============================================================
-// GOOGLE FORMS INTEGRATION
-// Byt ut URL:en nedan mot din Google Forms "prefilled" URL.
-// Lämna GOOGLE_FORM_URL tom ("") för att använda demo-läge.
-// Se instruktioner längre ner.
-// ============================================================
-const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScC4KUR9_CnuL8XCRvUQhWkJXxof4_iTxRd06jYLoJSEocTEQ/viewform"; // <-- KLISTRA IN DIN GOOGLE FORM URL HÄR
-
-// Google Forms entry IDs – byt ut dessa mot dina egna:
+const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScC4KUR9_CnuL8XCRvUQhWkJXxof4_iTxRd06jYLoJSEocTEQ/viewform";
 const ENTRY_NAME    = "entry.21947022";
 const ENTRY_GUESTS  = "entry.713809786";
 const ENTRY_ATTEND  = "entry.1995632185";
@@ -395,7 +557,6 @@ function submitForm(){
   const speechVal=speech==="ja"?"Ja":"Nej";
   const message=document.getElementById("f-message").value;
 
-  // If Google Form URL is configured, submit via hidden iframe
   if(GOOGLE_FORM_URL){
     const url=GOOGLE_FORM_URL.replace("/viewform","/formResponse")
       + "?" + ENTRY_NAME+"="+encodeURIComponent(name)
