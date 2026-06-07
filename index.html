@@ -116,6 +116,9 @@
   .btn-submit.ready { background:#4a5e3e; cursor:pointer; }
   .btn-submit.ready:hover { background:#5a7048; }
 
+  .form-error { font-size:.75rem; color:#b85c5c; margin-top:6px; display:none; }
+  .form-input.invalid { border-bottom-color:#b85c5c; }
+
   .thank-you { text-align:center; padding:40px 0; display:none; }
   .thank-you.show { display:block; }
   .thank-you h3 { font-family:'Great Vibes',cursive; font-size:2.2rem; font-weight:400; color:#3a4d30; margin-bottom:12px; }
@@ -439,6 +442,11 @@
         <input type="text" class="form-input" id="f-name" placeholder="Förnamn Efternamn">
       </div>
       <div class="form-group">
+        <label class="sec-label" style="text-align:left">Telefonnummer</label>
+        <input type="tel" class="form-input" id="f-phone" placeholder="07X-XXX XX XX">
+        <p class="form-error" id="phone-error">Vänligen ange ett giltigt telefonnummer</p>
+      </div>
+      <div class="form-group">
         <label class="sec-label" style="text-align:left">Antal gäster</label>
         <select class="form-input" id="f-guests">
           <option value="1">1 person</option>
@@ -521,6 +529,7 @@ faqs.forEach(f => {
 const GOOGLE_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLScC4KUR9_CnuL8XCRvUQhWkJXxof4_iTxRd06jYLoJSEocTEQ/viewform";
 const ENTRY_NAME    = "entry.21947022";
 const ENTRY_GUESTS  = "entry.713809786";
+const ENTRY_PHONE   = "entry.57797432";
 const ENTRY_ATTEND  = "entry.1995632185";
 const ENTRY_FOOD    = "entry.1854950474";
 const ENTRY_SPEECH  = "entry.887296743";
@@ -540,17 +549,39 @@ function setSpeech(v){
   speech=v;
   document.querySelectorAll("[data-speech]").forEach(b=>b.classList.toggle("active",b.dataset.speech===v));
 }
+function isValidPhone(p) {
+  // Strip spaces, dashes, parens
+  const cleaned = p.replace(/[\s\-()]/g, "");
+  // Accept Swedish numbers: 07XXXXXXXX, +467XXXXXXXX, or general 6+ digits
+  return /^(\+?46|0)\d{6,11}$/.test(cleaned) || /^\d{6,15}$/.test(cleaned);
+}
 function ck(){
   const n=document.getElementById("f-name").value.trim();
+  const p=document.getElementById("f-phone").value.trim();
+  const phoneOk = p && isValidPhone(p);
+  const phoneEl = document.getElementById("f-phone");
+  const phoneErr = document.getElementById("phone-error");
+
+  // Show error only if user has typed something invalid
+  if (p && !phoneOk) {
+    phoneEl.classList.add("invalid");
+    phoneErr.style.display = "block";
+  } else {
+    phoneEl.classList.remove("invalid");
+    phoneErr.style.display = "none";
+  }
+
   const b=document.getElementById("btn-submit");
-  if(n&&attending){b.classList.add("ready");b.style.cursor="pointer";}
+  if(n && phoneOk && attending){b.classList.add("ready");b.style.cursor="pointer";}
   else{b.classList.remove("ready");b.style.cursor="not-allowed";}
 }
 document.getElementById("f-name").addEventListener("input",ck);
+document.getElementById("f-phone").addEventListener("input",ck);
 
 function submitForm(){
   const name=document.getElementById("f-name").value.trim();
-  if(!name||!attending) return;
+  const phone=document.getElementById("f-phone").value.trim();
+  if(!name || !phone || !isValidPhone(phone) || !attending) return;
 
   const guests=document.getElementById("f-guests").value;
   const food=document.getElementById("f-food").value;
@@ -560,6 +591,7 @@ function submitForm(){
   if(GOOGLE_FORM_URL){
     const url=GOOGLE_FORM_URL.replace("/viewform","/formResponse")
       + "?" + ENTRY_NAME+"="+encodeURIComponent(name)
+      + "&" + ENTRY_PHONE+"="+encodeURIComponent(phone)
       + "&" + ENTRY_GUESTS+"="+encodeURIComponent(guests)
       + "&" + ENTRY_ATTEND+"="+encodeURIComponent(attending==="ja"?"Ja":"Nej")
       + "&" + ENTRY_FOOD+"="+encodeURIComponent(food)
